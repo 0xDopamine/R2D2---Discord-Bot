@@ -2,7 +2,12 @@ require("dotenv").config();
 const { Client, GatewayIntentBits, ConnectionService } = require('discord.js');
 const { token } = require('./config.json');
 
-const client = new Client({intents :[GatewayIntentBits.Guilds]});
+const client = new Client({intents :[
+	GatewayIntentBits.Guilds,
+	GatewayIntentBits.GuildMembers,
+	GatewayIntentBits.MessageContent,
+	GatewayIntentBits.GuildMessages
+]});
 
 client.once('ready', () => {
 	console.log('Ready!');
@@ -13,16 +18,17 @@ client.on('interactionCreate', async interaction => {
 
 	const { commandName } = interaction;
 
-	if (commandName === 'ping') {
+	if (commandName == 'ping') {
 		await interaction.reply('pong!');
 	}
-	else if (commandName === 'malreda') {
+	else if (commandName == 'malreda') {
 		await interaction.reply('raso sghir');
 	}
-	else if (commandName === 'server') {
-		await interaction.reply(`Server name: ${interaction.guild.name}\n Members: ${interaction.guild.memberCount}.`);
+	else if (commandName == 'server') {
+		await interaction.reply(`Server name: ${interaction.guild.name}\n
+		Members: ${interaction.guild.memberCount}.`);
 	}
-	else if (commandName === 'user') {
+	else if (commandName == 'user') {
 		await interaction.reply(`Your tag: ${interaction.user.tag}`);
 	}
 	else if (commandName == 'giphy') {
@@ -30,13 +36,21 @@ client.on('interactionCreate', async interaction => {
 		if (!gifSearchText)
 			await interaction.reply("Enter a valid option!");
 		else {
-			const url = `http://api.giphy.com/v1/gifs/search?q=${gifSearchText}&api_key=${process.env.GIPHY_API_KEY}&limit=100`;
+			const url = `http://api.giphy.com/v1/gifs/search?q=${gifSearchText}
+			&api_key=${process.env.GIPHY_API_KEY}&limit=100`;
 			const res = await fetch(url);
 			const json = await res.json();
 			const randomIndex = Math.floor(Math.random() * json.data.length);
 
 			await interaction.reply(json.data[randomIndex].url);
 		}
+	}
+	else if (commandName == 'nickname') {
+		const nickname = interaction.options.getString('nick');
+		
+		console.log(nickname);
+		await interaction.member.setNickname(nickname.replace());
+		await interaction.reply(`Behold the almighty ${nickname}!`);
 	}
 });
 

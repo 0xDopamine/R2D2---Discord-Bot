@@ -7,7 +7,12 @@ const commands = [
 	new SlashCommandBuilder().setName('ping').setDescription("replies with pong"),
 	new SlashCommandBuilder().setName('user').setDescription("shows the user of the command"),
 	new SlashCommandBuilder().setName('server').setDescription("shows server information"),
-	new SlashCommandBuilder().setName('giphy').setDescription("shows a gif that you search for").addStringOption(option => option.setName("search").setDescription('The gif category').setRequired(true))
+	new SlashCommandBuilder().setName('nickname').setDescription("Changes nicknames")
+		.addStringOption(option => option.setName("nick")
+		.setDescription('Enter your nickname').setRequired(true)),
+	new SlashCommandBuilder().setName('giphy').setDescription("shows a gif that you search for")
+		.addStringOption(option => option.setName("search")
+		.setDescription('The gif category').setRequired(true))
 
 ] .map(command => command.toJSON());
 
