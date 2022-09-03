@@ -1,12 +1,16 @@
 require("dotenv").config();
-const { Client, GatewayIntentBits, ConnectionService } = require('discord.js');
+const { Client, 
+		GatewayIntentBits, 
+		ConnectionService, 
+		ContextMenuCommandAssertions} = require('discord.js');
 const { token } = require('./config.json');
+const adminRole = process.env.ADMIN_ROLE;
 
 const client = new Client({intents :[
 	GatewayIntentBits.Guilds,
 	GatewayIntentBits.GuildMembers,
 	GatewayIntentBits.MessageContent,
-	GatewayIntentBits.GuildMessages
+	GatewayIntentBits.GuildMessages,
 ]});
 
 client.once('ready', () => {
@@ -17,7 +21,6 @@ client.on('interactionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return ;
 
 	const { commandName } = interaction;
-
 	if (commandName == 'ping') {
 		await interaction.reply('pong!');
 	}
@@ -47,9 +50,9 @@ client.on('interactionCreate', async interaction => {
 	}
 	else if (commandName == 'nickname') {
 		const nickname = interaction.options.getString('nick');
-		
+		const who = interaction.user.name;
 		console.log(nickname);
-		await interaction.member.setNickname(nickname.replace());
+		await who.setNi;
 		await interaction.reply(`Behold the almighty ${nickname}!`);
 	}
 });
