@@ -34,9 +34,8 @@ client.on('interactionCreate', async interaction => {
 			const res = await fetch(url);
 			const json = await res.json();
 			const randomIndex = Math.floor(Math.random() * json.data.length);
-			const reply = json.data[randomIndex].url
 
-			await interaction.reply(reply);
+			await interaction.reply(json.data[randomIndex].url);
 		}
 	}
 });
