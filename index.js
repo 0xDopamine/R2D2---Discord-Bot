@@ -50,9 +50,6 @@ client.on('interactionCreate', async interaction => {
 	}
 	else if (commandName == 'nickname') {
 		const nickname = interaction.options.getString('nick');
-		const who = interaction.user.name;
-		console.log(nickname);
-		await who.setNi;
 		await interaction.reply(`Behold the almighty ${nickname}!`);
 	}
 });
