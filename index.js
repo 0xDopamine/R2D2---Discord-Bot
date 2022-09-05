@@ -1,8 +1,16 @@
 require("dotenv").config();
+require("./deploy-commands.js");
+
 const { Client, 
 		GatewayIntentBits, 
 		ConnectionService, 
-		ContextMenuCommandAssertions} = require('discord.js');
+		ContextMenuCommandAssertions,
+		messageLink,
+		ClientUser,
+		Message,
+		GuildMember,
+		applications
+	} = require('discord.js');
 const { token } = require('./config.json');
 const adminRole = process.env.ADMIN_ROLE;
 
@@ -13,14 +21,30 @@ const client = new Client({intents :[
 	GatewayIntentBits.GuildMessages,
 ]});
 
+
+
 client.once('ready', () => {
 	console.log('Ready!');
 });
 
 client.on('interactionCreate', async interaction => {
+	
+	const access_token = applications.commands.permissions.update;
+	client.guilds.get(interaction.guildId).commands.permissions.add ({
+		command: interaction.commandId,
+		permissions: [{
+			id: adminRole,
+			type: 2,
+			permission: true,
+		}, ]
+	})
+	.then(console.log)
+	.catch(console.error);
+
 	if (!interaction.isChatInputCommand()) return ;
 
 	const { commandName } = interaction;
+
 	if (commandName == 'ping') {
 		await interaction.reply('pong!');
 	}
@@ -39,6 +63,7 @@ client.on('interactionCreate', async interaction => {
 		if (!gifSearchText)
 			await interaction.reply("Enter a valid option!");
 		else {
+			console.log(gifSearchText);
 			const url = `http://api.giphy.com/v1/gifs/search?q=${gifSearchText}
 			&api_key=${process.env.GIPHY_API_KEY}&limit=100`;
 			const res = await fetch(url);
@@ -50,6 +75,7 @@ client.on('interactionCreate', async interaction => {
 	}
 	else if (commandName == 'nickname') {
 		const nickname = interaction.options.getString('nick');
+		await GuildMember.setNickname(nickname, "NULL");
 		await interaction.reply(`Behold the almighty ${nickname}!`);
 	}
 });

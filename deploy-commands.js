@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, Routes } = require("discord.js");
+const { SlashCommandBuilder, Routes, Client, Application } = require("discord.js");
 const { REST } = require("@discordjs/rest");
 const { clientId, guildId, token} = require("./config.json");
 
