@@ -1,5 +1,6 @@
 require("dotenv").config();
 require("./deploy-commands.js");
+const keepOnline = require("./server.js");
 
 const { Client, 
 		GatewayIntentBits, 
@@ -13,7 +14,9 @@ const { Client,
 	} = require('discord.js');
 const { token } = require('./config.json');
 const adminRole = process.env.ADMIN_ROLE;
+const Database = require("@replit/database");
 
+const db = new Database();
 const client = new Client({intents :[
 	GatewayIntentBits.Guilds,
 	GatewayIntentBits.GuildMembers,
@@ -29,17 +32,17 @@ client.once('ready', () => {
 
 client.on('interactionCreate', async interaction => {
 	
-	const access_token = applications.commands.permissions.update;
-	client.guilds.get(interaction.guildId).commands.permissions.add ({
-		command: interaction.commandId,
-		permissions: [{
-			id: adminRole,
-			type: 2,
-			permission: true,
-		}, ]
-	})
-	.then(console.log)
-	.catch(console.error);
+	// const access_token = applications.commands.permissions.update;
+	// client.guilds.get(interaction.guildId).commands.permissions.add ({
+	// 	command: interaction.commandId,
+	// 	permissions: [{
+	// 		id: adminRole,
+	// 		type: 2,
+	// 		permission: true,
+	// 	}, ]
+	// })
+	// .then(console.log)
+	// .catch(console.error);
 
 	if (!interaction.isChatInputCommand()) return ;
 
@@ -75,9 +78,10 @@ client.on('interactionCreate', async interaction => {
 	}
 	else if (commandName == 'nickname') {
 		const nickname = interaction.options.getString('nick');
-		await GuildMember.setNickname(nickname, "NULL");
+		// await GuildMember.setNickname(nickname, "NULL");
 		await interaction.reply(`Behold the almighty ${nickname}!`);
 	}
 });
 
+keepOnline();
 client.login(token);
