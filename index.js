@@ -1,5 +1,7 @@
 require("dotenv").config();
 require("./deploy-commands.js");
+
+const mongoose = require("mongoose")
 const keepOnline = require("./server.js");
 
 const { Client, 
@@ -26,23 +28,15 @@ const client = new Client({intents :[
 
 
 
-client.once('ready', () => {
+client.once('ready', async () => {
+	await mongoose.connect(process.env.MONGO_URL || '', {
+		keepAlive: true,
+	})
 	console.log('Ready!');
 });
 
 client.on('interactionCreate', async interaction => {
 	
-	// const access_token = applications.commands.permissions.update;
-	// client.guilds.get(interaction.guildId).commands.permissions.add ({
-	// 	command: interaction.commandId,
-	// 	permissions: [{
-	// 		id: adminRole,
-	// 		type: 2,
-	// 		permission: true,
-	// 	}, ]
-	// })
-	// .then(console.log)
-	// .catch(console.error);
 
 	if (!interaction.isChatInputCommand()) return ;
 
