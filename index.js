@@ -1,22 +1,25 @@
 require("dotenv").config();
 require("./deploy-commands.js");
 
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 const keepOnline = require("./server.js");
-
+const QRCode = require ("qrcode");
+export const GoogleQRCodeURLRoot = "https://chart.googleapis.com/chart?cht=qr";
 const { Client, 
-		GatewayIntentBits, 
-		ConnectionService, 
-		ContextMenuCommandAssertions,
-		messageLink,
-		ClientUser,
-		Message,
-		GuildMember,
-		applications
-	} = require('discord.js');
+	GatewayIntentBits, 
+	ConnectionService, 
+	ContextMenuCommandAssertions,
+	messageLink,
+	ClientUser,
+	Message,
+	GuildMember,
+	applications
+} = require('discord.js');
 const { token } = require('./config.json');
 const adminRole = process.env.ADMIN_ROLE;
 const Database = require("@replit/database");
+const DiscordXP= require("discordjs-xp");
+const xpClient = new DiscordXP(MONGO_URL);
 
 const db = new Database();
 const client = new Client({intents :[
@@ -26,18 +29,30 @@ const client = new Client({intents :[
 	GatewayIntentBits.GuildMessages,
 ]});
 
-
-
 client.once('ready', async () => {
-	await mongoose.connect(process.env.MONGO_URL || '', {
-		keepAlive: true,
-	})
 	console.log('Ready!');
 });
 
-client.on('interactionCreate', async interaction => {
-	
 
+// xpClient.users.create ({ guildId: guildId, userId: userId }).then(async (user) => {
+// 	await user.xp.add(10);
+// 	await user.xp.subtract(10);
+// 	await user.levels.add(1);
+// 	await user.levels.subtract(1);
+// });
+
+// xpClient.users.fetch ({ guildId: guildId, userId: userId }).then(async (user) => {
+// 	await user.xp.add(10);
+// 	await user.xp.subtract(10);
+// 	await user.levels.add(1);
+// 	await user.levels.subtract(1);
+// });
+
+
+client.on('interactionCreate', async interaction => {
+	// await mongoose.connect(process.env.MONGO_URL || '', {
+	// 	keepAlive: true,
+	// })
 	if (!interaction.isChatInputCommand()) return ;
 
 	const { commandName } = interaction;
@@ -75,6 +90,12 @@ client.on('interactionCreate', async interaction => {
 		// await GuildMember.setNickname(nickname, "NULL");
 		await interaction.reply(`Behold the almighty ${nickname}!`);
 	}
+	
+	// setTimeout(async () => {
+	// 	await new testSchema ({
+	// 		message: 'Hello world',
+	// 	}).save()
+	// }, 1000)
 });
 
 keepOnline();

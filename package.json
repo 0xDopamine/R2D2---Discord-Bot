@@ -4,6 +4,7 @@
     "discord.js": "^14.3.0",
     "discordjs-xp": "^1.1.4",
     "express": "^4.18.1",
-    "mongoose": "^6.5.4"
+    "mongoose": "^6.5.4",
+    "qrcode": "^1.5.1"
   }
 }
