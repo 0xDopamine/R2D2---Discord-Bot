@@ -13,7 +13,15 @@ const commands = [
 		.setDescription('Enter your nickname').setRequired(true)),
 	new SlashCommandBuilder().setName('giphy').setDescription("shows a gif that you search for")
 		.addStringOption(option => option.setName("search")
-		.setDescription('The gif category').setRequired(true))
+		.setDescription('The gif category').setRequired(true)),
+	new SlashCommandBuilder().setName('qrcode').setDescription("Replies with QR Code")
+		.addStringOption(option => option.setName("type"))
+			.setDescription('specify the type of the QR code')
+		.addNumberOption(option => option.setName("size")
+			.setDescription('specify the size of the QR Code (<width>x<height>)'))
+		.addStringOption(option => option.setName("data")
+			.setDescription('the data you want converted').setRequired(true))
+	
 
 ] .map(command => command.toJSON());
 

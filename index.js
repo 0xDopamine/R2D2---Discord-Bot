@@ -3,8 +3,8 @@ require("./deploy-commands.js");
 
 const mongoose = require("mongoose");
 const keepOnline = require("./server.js");
-const QRCode = require ("qrcode");
-export const GoogleQRCodeURLRoot = "https://chart.googleapis.com/chart?cht=qr";
+// const QRCode = require ("qrcode");
+// export const GoogleQRCodeURLRoot = "https://chart.googleapis.com/chart?cht=qr";
 const { Client, 
 	GatewayIntentBits, 
 	ConnectionService, 
@@ -18,8 +18,8 @@ const { Client,
 const { token } = require('./config.json');
 const adminRole = process.env.ADMIN_ROLE;
 const Database = require("@replit/database");
-const DiscordXP= require("discordjs-xp");
-const xpClient = new DiscordXP(MONGO_URL);
+// const DiscordXP= require("discordjs-xp");
+// const xpClient = new DiscordXP(MONGO_URL);
 
 const db = new Database();
 const client = new Client({intents :[
