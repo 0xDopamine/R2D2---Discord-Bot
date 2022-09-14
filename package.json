@@ -5,6 +5,7 @@
     "discordjs-xp": "^1.1.4",
     "express": "^4.18.1",
     "mongoose": "^6.5.4",
+    "nodemon": "^2.0.19",
     "qrcode": "^1.5.1"
   }
 }

@@ -3,6 +3,7 @@ require("./deploy-commands.js");
 
 const mongoose = require("mongoose");
 const keepOnline = require("./server.js");
+const QRCode = require("qrcode");
 // const QRCode = require ("qrcode");
 // export const GoogleQRCodeURLRoot = "https://chart.googleapis.com/chart?cht=qr";
 const { Client, 
@@ -12,6 +13,8 @@ const { Client,
 	messageLink,
 	ClientUser,
 	Message,
+	MessageAttachement,
+	MessageEmbed,
 	GuildMember,
 	applications
 } = require('discord.js');
@@ -90,7 +93,40 @@ client.on('interactionCreate', async interaction => {
 		// await GuildMember.setNickname(nickname, "NULL");
 		await interaction.reply(`Behold the almighty ${nickname}!`);
 	}
-	
+	else if (commandName == 'qrcode') {
+		const type = interaction.options.getString('type');
+		const data = interaction.options.getString('data');
+		const size = interaction.options.getInteger('size');
+		const color = interaction.options.getString('color');
+
+		const QRopts = {
+			color: {
+				dark: color ?? '#000',
+				light: color ?? '#FFF'
+			},
+			size: size ?? 116,
+		}
+
+		QRCode.toDataURL(data, QRopts, async function (err, b64image) {
+			if (!b64image) {
+				return await interaction.reply({
+					content: 'Cannot create QRCode',
+					ephemeral: true
+				});
+			}
+			
+			const image = b64image.split(',')[1];
+			const buf = new Buffer.from(image, 'base64');
+			const file = new MessageAttachement(buf, 'qrcode.jpeg');
+
+			const reply = new MessageEmbed()
+				.setTitle('QR Code Response')
+				.setImage('attachment://qrcode.jpeg')
+				.setTimestamp();
+			await interaction.channel.send({embeds: [reply], files: [file]});
+		});
+
+;	}
 	// setTimeout(async () => {
 	// 	await new testSchema ({
 	// 		message: 'Hello world',
