@@ -1,11 +1,10 @@
 require("dotenv").config();
 require("./deploy-commands.js");
 
+const axios = require("axios");
 const mongoose = require("mongoose");
 const keepOnline = require("./server.js");
-const QRCode = require("qrcode");
-// const QRCode = require ("qrcode");
-// export const GoogleQRCodeURLRoot = "https://chart.googleapis.com/chart?cht=qr";
+
 const { Client, 
 	GatewayIntentBits, 
 	ConnectionService, 
@@ -21,8 +20,6 @@ const { Client,
 const { token } = require('./config.json');
 const adminRole = process.env.ADMIN_ROLE;
 const Database = require("@replit/database");
-// const DiscordXP= require("discordjs-xp");
-// const xpClient = new DiscordXP(MONGO_URL);
 
 const db = new Database();
 const client = new Client({intents :[
@@ -36,26 +33,8 @@ client.once('ready', async () => {
 	console.log('Ready!');
 });
 
-
-// xpClient.users.create ({ guildId: guildId, userId: userId }).then(async (user) => {
-// 	await user.xp.add(10);
-// 	await user.xp.subtract(10);
-// 	await user.levels.add(1);
-// 	await user.levels.subtract(1);
-// });
-
-// xpClient.users.fetch ({ guildId: guildId, userId: userId }).then(async (user) => {
-// 	await user.xp.add(10);
-// 	await user.xp.subtract(10);
-// 	await user.levels.add(1);
-// 	await user.levels.subtract(1);
-// });
-
-
 client.on('interactionCreate', async interaction => {
-	// await mongoose.connect(process.env.MONGO_URL || '', {
-	// 	keepAlive: true,
-	// })
+
 	if (!interaction.isChatInputCommand()) return ;
 
 	const { commandName } = interaction;
@@ -96,42 +75,21 @@ client.on('interactionCreate', async interaction => {
 	else if (commandName == 'qrcode') {
 		const type = interaction.options.getString('type');
 		const data = interaction.options.getString('data');
-		const size = interaction.options.getInteger('size');
+		const size = interaction.options.getNumber('size');
 		const color = interaction.options.getString('color');
 
-		const QRopts = {
-			color: {
-				dark: color ?? '#000',
-				light: color ?? '#FFF'
-			},
-			size: size ?? 116,
-		}
-
-		QRCode.toDataURL(data, QRopts, async function (err, b64image) {
-			if (!b64image) {
-				return await interaction.reply({
-					content: 'Cannot create QRCode',
-					ephemeral: true
-				});
+		axios
+		.get(`https://chart.googleapis.com/chart?cht=qr&chs=${size}x${size}&chl=${data}&chco=${color}`)
+		.then(reply => {
+			console.log(`statusCode: ${reply.status}`);
+			if (reply.config.url) {
+				interaction.reply(reply.config.url);
 			}
-			
-			const image = b64image.split(',')[1];
-			const buf = new Buffer.from(image, 'base64');
-			const file = new MessageAttachement(buf, 'qrcode.jpeg');
-
-			const reply = new MessageEmbed()
-				.setTitle('QR Code Response')
-				.setImage('attachment://qrcode.jpeg')
-				.setTimestamp();
-			await interaction.channel.send({embeds: [reply], files: [file]});
+		})
+		.catch(error => {
+			console.log(error);
 		});
-
-;	}
-	// setTimeout(async () => {
-	// 	await new testSchema ({
-	// 		message: 'Hello world',
-	// 	}).save()
-	// }, 1000)
+	}
 });
 
 keepOnline();
