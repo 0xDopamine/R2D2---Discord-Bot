@@ -1,9 +1,10 @@
-require("dotenv").config();
 require("./deploy-commands.js");
+require("dotenv").config();
 
 const axios = require("axios");
 const mongoose = require("mongoose");
 const keepOnline = require("./server.js");
+const fetch = require("node-fetch");
 
 const { Client, 
 	GatewayIntentBits, 
@@ -90,6 +91,57 @@ client.on('interactionCreate', async interaction => {
 			console.log(error);
 		});
 	}
+	else if (commandName == '42') {
+		const login = interaction.options.getString('login');
+    	const URL = `https://cdn.intra.42.fr/users/${login}.JPG`;
+
+		const req = await fetch(URL);
+		if (req.status == 404)
+		{
+			const URL = `https://cdn.intra.42.fr/users/${login}.jpg`;
+			const req = await fetch(URL);
+			
+			if (login == "hbouhsis")
+				await interaction.reply(`qhba nifha kbir ${URL}`);
+			if (req.status == 200)
+				await interaction.reply(URL);
+			else if (req.status == 404)
+			{
+				const URL = `https://cdn.intra.42.fr/users/${login}.jpeg`;
+				const req = await fetch(URL);
+				if (req.status == 200)
+					await interaction.reply(URL);
+				else  
+					await interaction.reply("The user was not found :(");
+			}
+			}
+		else
+			await interaction.reply(URL);
+	}
+	// else if (commandName == '42') {
+	// 	const login = interaction.options.getString('login');
+	// 	const URL = `https://cdn.intra.42.fr/users/${login}.JPG`;
+		
+	// 	var req = await fetch(URL);
+	// 	if (req.status == 404)
+	// 	{
+	// 		const URL = `https://cdn.intra.42.fr/users/${login}.jpg`;
+	// 		req = fetch(URL);
+	// 		if (req.status == 200)
+	// 			await interaction.reply(URL);
+	// 		else if (req.status == 404)
+	// 		{
+	// 			const URL = `https://cdn.intra.42.fr/users/${login}.jpeg`;
+	// 			req = fetch(URL);
+	// 			if (req.status == 200)
+	// 				await interaction.reply(URL);
+	// 			else
+	// 				await interaction.reply("User not found :(");
+	// 		}
+	// 	}
+	// 	else
+	// 		await interaction.reply(URL);
+	// }
 });
 
 keepOnline();

@@ -22,9 +22,10 @@ const commands = [
 		.addStringOption(option => option.setName("data")
 			.setDescription('the data you want converted').setRequired(true))
 		.addStringOption(option => option.setName("color")
-			.setDescription('Set the color of the QR Code').setRequired(true))
-	
-
+			.setDescription('Set the color of the QR Code').setRequired(true)),
+	new SlashCommandBuilder().setName('42').setDescription("replies with intra picture.")
+		.addStringOption(option => option.setName("login")
+			.setDescription('enter a valid 42 login').setRequired(true))
 ] .map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
